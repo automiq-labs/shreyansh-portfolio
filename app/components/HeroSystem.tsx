@@ -1,33 +1,20 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { nodes, edges } from "../../data/systemMap";
 import type { SystemNode } from "../../data/systemMap";
 import { projects } from "../../data/projects";
+
+const VB_W = 1000;
+const VB_H = 200;
 
 function getEdgePath(from: SystemNode, to: SystemNode): string {
   const x1 = from.x + from.w;
   const y1 = from.y + from.h / 2;
   const x2 = to.x;
   const y2 = to.y + to.h / 2;
-
-  if (from.core) {
-    // Core → output: right side of core to left side of output
-    const cx1 = from.x + from.w;
-    const cy1 = from.y + from.h / 2;
-    const midX = cx1 + (x2 - cx1) / 2;
-    return `M${cx1},${cy1} L${midX},${cy1} L${midX},${y2} L${x2},${y2}`;
-  }
-
-  if (to.core) {
-    // Input → core: right side of input to left side of core
-    const cx2 = to.x;
-    const cy2 = to.y + to.h / 2;
-    const midX = x1 + (cx2 - x1) / 2;
-    return `M${x1},${y1} L${midX},${y1} L${midX},${cy2} L${cx2},${cy2}`;
-  }
-
-  return `M${x1},${y1} L${x2},${y2}`;
+  const dx = (x2 - x1) * 0.4;
+  return `M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}`;
 }
 
 function getTooltipText(node: SystemNode): string {
@@ -44,45 +31,38 @@ export default function HeroSystem() {
     y: number;
   } | null>(null);
 
+  const [reduceMotion, setReduceMotion] = useState(true);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduceMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   const handleClick = useCallback((node: SystemNode) => {
     const target = node.slug || "projects";
     document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   return (
-    <div className="hero-system-wrap" style={{ position: "relative" }}>
+    <div
+      className="hero-system-wrap"
+      style={{ position: "relative", maxWidth: "1200px", margin: "0 auto" }}
+    >
       <style>{`
         .hero-system-wrap { display: none; }
         @media (min-width: 1024px) {
           .hero-system-wrap { display: block; }
         }
-
         .sys-node { cursor: pointer; outline: none; }
         .sys-node:hover rect,
-        .sys-node:focus-visible rect { stroke-opacity: 1; }
-
-        @media (prefers-reduced-motion: no-preference) {
-          .sys-edge {
-            animation: edgeFlow 3s linear infinite;
-          }
-          .sys-pulse {
-            animation: pulseMove 3s ease-in-out infinite;
-          }
-        }
-
-        @keyframes edgeFlow {
-          to { stroke-dashoffset: -30; }
-        }
-        @keyframes pulseMove {
-          0%   { opacity: 0; offset-distance: 0%; }
-          10%  { opacity: 1; }
-          90%  { opacity: 1; }
-          100% { opacity: 0; offset-distance: 100%; }
-        }
+        .sys-node:focus-visible rect { stroke-opacity: 1 !important; }
       `}</style>
 
       <svg
-        viewBox="0 0 1100 260"
+        viewBox={`0 0 ${VB_W} ${VB_H}`}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         role="img"
@@ -90,33 +70,41 @@ export default function HeroSystem() {
       >
         <title>Architecture diagram showing how data flows through Shreyansh&apos;s production systems</title>
 
-        {/* Edges */}
+        {/* Edges + pulses */}
         {edges.map((edge) => {
           const from = nodes.find((n) => n.id === edge.from)!;
           const to = nodes.find((n) => n.id === edge.to)!;
-          const path = getEdgePath(from, to);
-          const edgeId = `edge-${edge.from}-${edge.to}`;
+          const d = getEdgePath(from, to);
+          const key = `${edge.from}-${edge.to}`;
           return (
-            <g key={edgeId}>
+            <g key={key}>
               <path
-                d={path}
+                d={d}
                 stroke="#e8d5b0"
-                strokeOpacity={0.35}
+                strokeOpacity={0.18}
                 strokeWidth={1}
-                strokeDasharray="4 6"
                 fill="none"
-                className="sys-edge"
-                style={{ animationDelay: `${edge.delay}s` }}
               />
-              <circle
-                r={3}
-                fill="#e8d5b0"
-                className="sys-pulse"
-                style={{
-                  offsetPath: `path('${path}')`,
-                  animationDelay: `${edge.delay}s`,
-                }}
-              />
+              {!reduceMotion && (
+                <>
+                  <circle r={2.5} fill="#e8d5b0" opacity={0.9}>
+                    <animateMotion
+                      dur="3s"
+                      repeatCount="indefinite"
+                      path={d}
+                      begin={`${edge.delay}s`}
+                    />
+                  </circle>
+                  <circle r={2.5} fill="#e8d5b0" opacity={0.5}>
+                    <animateMotion
+                      dur="3s"
+                      repeatCount="indefinite"
+                      path={d}
+                      begin={`${edge.delay + 1.5}s`}
+                    />
+                  </circle>
+                </>
+              )}
             </g>
           );
         })}
@@ -124,6 +112,7 @@ export default function HeroSystem() {
         {/* Nodes */}
         {nodes.map((node) => {
           const tooltipText = getTooltipText(node);
+          const fontSize = node.core ? 13 : 11;
           return (
             <g
               key={node.id}
@@ -141,8 +130,8 @@ export default function HeroSystem() {
                 const rect = svg.getBoundingClientRect();
                 const cx = node.x + node.w / 2;
                 const cy = node.y;
-                const scaleX = rect.width / 1100;
-                const scaleY = rect.height / 260;
+                const scaleX = rect.width / VB_W;
+                const scaleY = rect.height / VB_H;
                 setHover({
                   text: tooltipText,
                   x: cx * scaleX,
@@ -156,8 +145,8 @@ export default function HeroSystem() {
                 const rect = svg.getBoundingClientRect();
                 const cx = node.x + node.w / 2;
                 const cy = node.y;
-                const scaleX = rect.width / 1100;
-                const scaleY = rect.height / 260;
+                const scaleX = rect.width / VB_W;
+                const scaleY = rect.height / VB_H;
                 setHover({
                   text: tooltipText,
                   x: cx * scaleX,
@@ -175,15 +164,15 @@ export default function HeroSystem() {
                 fill="#141414"
                 stroke="#e8d5b0"
                 strokeWidth={node.core ? 1 : 0.5}
-                strokeOpacity={0.6}
+                strokeOpacity={node.core ? 1 : 0.5}
               />
               <text
                 x={node.x + node.w / 2}
-                y={node.sublabel ? node.y + node.h / 2 - 6 : node.y + node.h / 2 + 1}
+                y={node.sublabel ? node.y + node.h / 2 - 7 : node.y + node.h / 2 + 1}
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fill="#e8d5b0"
-                fontSize={12}
+                fontSize={fontSize}
                 fontFamily="'Inter', sans-serif"
               >
                 {node.label}
@@ -191,7 +180,7 @@ export default function HeroSystem() {
               {node.sublabel && (
                 <text
                   x={node.x + node.w / 2}
-                  y={node.y + node.h / 2 + 12}
+                  y={node.y + node.h / 2 + 11}
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="#777777"

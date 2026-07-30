@@ -575,7 +575,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div style={{ marginTop: "48px" }}>
+        <div style={{ marginTop: "24px", paddingBottom: "20px" }}>
           <HeroSystem />
         </div>
       </section>
