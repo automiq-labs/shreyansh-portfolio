@@ -49,6 +49,7 @@ export default function Home() {
   const projectsRef = useFadeIn();
   const servicesRef = useFadeIn();
   const skillsRef = useFadeIn();
+  const experienceRef = useFadeIn();
   const certRef = useFadeIn();
   const contactRef = useFadeIn();
 
@@ -319,10 +320,16 @@ export default function Home() {
           Shreyansh Kanoongo
         </span>
         <div className="nav-links">
-          {["About", "Projects", "Skills", "Contact"].map((item) => (
+          {[
+            { label: "About", href: "#about" },
+            { label: "Work", href: "#projects" },
+            { label: "Experience", href: "#experience" },
+            { label: "Skills", href: "#skills" },
+            { label: "Contact", href: "#contact" },
+          ].map((item) => (
             <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
+              key={item.label}
+              href={item.href}
               style={{
                 color: "#777777",
                 fontSize: "15px",
@@ -336,7 +343,7 @@ export default function Home() {
                 ((e.target as HTMLElement).style.color = "#777777")
               }
             >
-              {item}
+              {item.label}
             </a>
           ))}
           <a
@@ -359,7 +366,7 @@ export default function Home() {
               (e.target as HTMLElement).style.background = "transparent";
             }}
           >
-            Hire Me
+            Start a project
           </a>
         </div>
       </nav>
@@ -410,12 +417,12 @@ export default function Home() {
                   width: "6px",
                   height: "6px",
                   borderRadius: "50%",
-                  background: "#4ade80",
+                  background: "#e8d5b0",
                   display: "inline-block",
                 }}
               />
               <span style={{ color: "#999999", fontSize: "15px" }}>
-                Open to work · Immediately
+                Available for projects
               </span>
             </div>
 
@@ -524,9 +531,9 @@ export default function Home() {
             {/* Stats */}
             <div className="hero-stats">
               {[
-                { num: "15+", label: "Systems Built" },
-                { num: "5", label: "Certifications" },
-                { num: "1", label: "Live Product" },
+                { num: "15", label: "Systems Built" },
+                { num: "9", label: "Live in Production" },
+                { num: "2 Weeks", label: "Average Build" },
               ].map((stat, i) => (
                 <div
                   key={i}
@@ -637,10 +644,7 @@ export default function Home() {
                   marginBottom: "16px",
                 }}
               >
-                I started in sales and marketing, which means before I write a
-                single line of code, I ask what problem this solves, who feels
-                it, and what fixed actually looks like. That background shapes
-                everything I build.
+                I started in sales and marketing, which means before I write a line of code I ask what problem this solves, who feels it, and what fixed actually looks like.
               </p>
               <p
                 style={{
@@ -650,10 +654,7 @@ export default function Home() {
                   marginBottom: "16px",
                 }}
               >
-                I come from two years of working directly with clients and
-                businesses. I understand how operations run, where things break,
-                and what people actually need from a system. The technical part
-                is how I get there. The outcome is all that matters.
+                Two years working directly with businesses taught me where operations break and what people actually need from a system. The technical part is how I get there. The outcome is the only thing that gets judged.
               </p>
               <p
                 style={{
@@ -676,9 +677,8 @@ export default function Home() {
               }}
             >
               {[
-                { label: "Location", value: "Jaipur, Rajasthan, India" },
-                { label: "Available", value: "Immediately · Remote or On-site" },
-                { label: "Open to", value: "Full-time · Freelance · Contract" },
+                { label: "Location", value: "Jaipur, Rajasthan, India · Remote worldwide" },
+                { label: "Studio", value: "Automiq Labs", link: "https://automiqlabs.com" },
                 { label: "Education", value: "BBA · Manipal University Jaipur" },
               ].map((item) => (
                 <div key={item.label} className="about-info-row">
@@ -692,9 +692,20 @@ export default function Home() {
                   >
                     {item.label}
                   </span>
-                  <span style={{ color: "#888888", fontSize: "15px" }}>
-                    {item.value}
-                  </span>
+                  {"link" in item && item.link ? (
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "#e8d5b0", fontSize: "15px", textDecoration: "none" }}
+                    >
+                      {item.value}
+                    </a>
+                  ) : (
+                    <span style={{ color: "#888888", fontSize: "15px" }}>
+                      {item.value}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
@@ -1271,6 +1282,58 @@ export default function Home() {
                 </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── EXPERIENCE ── */}
+      <section
+        id="experience"
+        ref={experienceRef}
+        style={{
+          padding: "80px clamp(24px, 5vw, 80px)",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          opacity: 0,
+          transform: "translateY(20px)",
+          transition: "opacity 0.6s ease, transform 0.6s ease",
+        }}
+      >
+        <p
+          style={{
+            color: "#aaaaaa",
+            fontSize: "15px",
+            letterSpacing: "4px",
+            textTransform: "uppercase",
+            marginBottom: "40px",
+          }}
+        >
+          Experience
+        </p>
+
+        <div>
+          <p
+            style={{
+              color: "#ffffff",
+              fontSize: "15px",
+              fontWeight: 400,
+              marginBottom: "16px",
+            }}
+          >
+            AI Executive · Divine Hindu (D2C spiritual products) · 2026
+          </p>
+          <p
+            style={{
+              color: "#888888",
+              fontSize: "14px",
+              lineHeight: 1.9,
+              marginBottom: "16px",
+            }}
+          >
+            First AI hire. Built and shipped four production systems end to end: a full applicant tracking system with AI resume scoring and automated candidate emails; a Meta ads intelligence dashboard with AI-generated daily briefings and an automated alert engine; an internal procurement and warehouse platform with role-based access enforced at the database layer; and a marketplace price intelligence tool tracking listings across Amazon, Flipkart, and Shopify. All four live in production and used daily by the founding team.
+          </p>
+          <p style={{ color: "#777777", fontSize: "14px" }}>
+            Next.js · TypeScript · Supabase · Vercel · Anthropic API · n8n
+          </p>
         </div>
       </section>
 
