@@ -180,6 +180,7 @@ export default function Home() {
 
         /* ── HERO BUTTONS ── */
         .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+        .hero-stats-sep { display: inline; }
 
         /* ── CONTACT ── */
         .contact-cards {
@@ -220,6 +221,8 @@ export default function Home() {
 
           /* HERO */
           .hero-section { padding: 100px 24px 60px !important; min-height: auto !important; }
+          .hero-stats-row { gap: 16px !important; margin-top: 36px !important; }
+          .hero-stats-sep { display: none !important; }
 
           /* HERO BUTTONS */
           .hero-btns { flex-direction: column; align-items: stretch; }
@@ -239,7 +242,7 @@ export default function Home() {
             padding: 16px 12px !important;
           }
           .project-row .proj-badges { display: none; }
-          .proj-expand-inner > div { padding-left: 48px !important; }
+          .proj-expand-inner > div { padding-left: 0 !important; }
 
           /* SKILLS */
           .skills-section { padding: 60px 24px !important; }
@@ -260,11 +263,6 @@ export default function Home() {
           .footer-inner { flex-direction: column; gap: 8px; text-align: center; }
         }
 
-        /* ══════════════════════════════════════
-           SMALL MOBILE — 480px and below
-        ══════════════════════════════════════ */
-        @media (max-width: 480px) {
-        }
       `}</style>
 
       {/* ── NAVIGATION ── */}
@@ -485,6 +483,7 @@ export default function Home() {
 
         {/* Stats row */}
         <div
+          className="hero-stats-row"
           style={{
             display: "flex",
             alignItems: "center",
@@ -498,12 +497,12 @@ export default function Home() {
             <span style={{ fontSize: "20px", fontWeight: 300, color: "#ffffff" }}>15</span>
             <span style={{ fontSize: "12px", color: "#aaaaaa", textTransform: "uppercase", letterSpacing: "1.5px" }}>Systems Built</span>
           </span>
-          <span style={{ color: "#444444", fontSize: "14px" }}>·</span>
+          <span className="hero-stats-sep" style={{ color: "#444444", fontSize: "14px" }}>·</span>
           <span style={{ display: "inline-flex", alignItems: "baseline", gap: "6px" }}>
             <span style={{ fontSize: "20px", fontWeight: 300, color: "#ffffff" }}>9</span>
             <span style={{ fontSize: "12px", color: "#aaaaaa", textTransform: "uppercase", letterSpacing: "1.5px" }}>Live in Production</span>
           </span>
-          <span style={{ color: "#444444", fontSize: "14px" }}>·</span>
+          <span className="hero-stats-sep" style={{ color: "#444444", fontSize: "14px" }}>·</span>
           <span style={{ display: "inline-flex", alignItems: "baseline", gap: "6px" }}>
             <span style={{ fontSize: "20px", fontWeight: 300, color: "#ffffff" }}>2-Week</span>
             <span style={{ fontSize: "12px", color: "#aaaaaa", textTransform: "uppercase", letterSpacing: "1.5px" }}>Average Build</span>
