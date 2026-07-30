@@ -11,7 +11,7 @@ export const projects: Project[] = [
       "Built for Soul Bands, a retail jewellery business, and actively used in daily operations. Tracks stock levels, records every sale, auto-updates inventory after each transaction, tracks profit and loss, and sends automated notifications to customers via email and Instagram DM. Handed off to the client and running without my involvement.",
     stack: ["Google AppSheet", "Google Sheets", "n8n", "Email APIs", "Instagram Messaging"],
     role: "Designed and built the full system",
-    status: "Handed off",
+    status: "Live, handed off",
     type: "Client work",
     featured: true,
   },

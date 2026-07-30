@@ -832,7 +832,7 @@ export default function Home() {
                     }}
                     className={getStatusStyle(project.status)}
                   >
-                    {project.status === "Live in production" && (
+                    {project.status.startsWith("Live") && (
                       <span
                         style={{
                           width: "5px",
@@ -1049,7 +1049,7 @@ export default function Home() {
                     }}
                     className={getStatusStyle(project.status)}
                   >
-                    {project.status === "Live in production" && (
+                    {project.status.startsWith("Live") && (
                       <span
                         style={{
                           width: "5px",

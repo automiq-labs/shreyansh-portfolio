@@ -1,6 +1,6 @@
 export type ProjectStatus =
   | "Live in production"
-  | "Handed off"
+  | "Live, handed off"
   | "Delivered"
   | "Working build"
   | "Soft launch";
