@@ -71,27 +71,6 @@ export default function Home() {
         .nav-links { display: flex; align-items: center; gap: 24px; }
 
         /* ── HERO ── */
-        .hero-inner {
-          display: grid;
-          grid-template-columns: 1fr 280px;
-          gap: 80px;
-          align-items: center;
-        }
-        .hero-photo-col { display: flex; flex-direction: column; gap: 20px; }
-        .hero-photo-wrap {
-          width: 100%;
-          aspect-ratio: 4/5;
-          border-radius: 16px;
-          overflow: hidden;
-          border: 0.5px solid rgba(255,255,255,0.08);
-          background: #141414;
-        }
-        .hero-stats {
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          border-top: 0.5px solid rgba(255,255,255,0.06);
-          padding-top: 16px;
-        }
 
         /* ── ABOUT ── */
         .about-grid {
@@ -222,19 +201,6 @@ export default function Home() {
 
           /* HERO */
           .hero-section { padding: 100px 24px 60px !important; min-height: auto !important; }
-          .hero-inner {
-            grid-template-columns: 1fr;
-            gap: 36px;
-          }
-          /* Photo col goes first on mobile via order */
-          .hero-photo-col { order: -1; align-items: center; }
-          .hero-photo-wrap {
-            width: 140px;
-            height: 140px;
-            aspect-ratio: 1/1;
-            border-radius: 50%;
-          }
-          .hero-stats { grid-template-columns: 1fr 1fr 1fr; }
 
           /* HERO BUTTONS */
           .hero-btns { flex-direction: column; align-items: stretch; }
@@ -244,6 +210,7 @@ export default function Home() {
           .about-section { padding: 60px 24px !important; }
           .about-grid { grid-template-columns: 1fr; gap: 32px; }
           .about-info-row { grid-template-columns: 90px 1fr; gap: 12px; }
+          .about-photo { max-width: 320px; }
 
           /* PROJECTS */
           .projects-section { padding: 60px 24px !important; }
@@ -291,7 +258,6 @@ export default function Home() {
         ══════════════════════════════════════ */
         @media (max-width: 480px) {
           .services-grid { grid-template-columns: 1fr; }
-          .hero-stats { gap: 0; }
         }
       `}</style>
 
@@ -387,195 +353,159 @@ export default function Home() {
           margin: "0 auto",
         }}
       >
-        <div className="hero-inner">
-          {/* Left */}
-          <div>
-            <p
-              style={{
-                color: "#aaaaaa",
-                fontSize: "15px",
-                letterSpacing: "4px",
-                textTransform: "uppercase",
-                marginBottom: "16px",
-              }}
-            >
-              AI Automation &amp; Systems Developer · Jaipur, India
-            </p>
+        {/* Text block */}
+        <div style={{ maxWidth: "760px", margin: "0 auto", textAlign: "center" }}>
+          <p
+            style={{
+              color: "#aaaaaa",
+              fontSize: "15px",
+              letterSpacing: "4px",
+              textTransform: "uppercase",
+              marginBottom: "12px",
+            }}
+          >
+            AI Automation &amp; Systems Developer · Jaipur, India
+          </p>
 
-            <div
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              background: "rgba(255,255,255,0.04)",
+              border: "0.5px solid rgba(255,255,255,0.08)",
+              borderRadius: "100px",
+              padding: "5px 12px",
+              marginBottom: "24px",
+            }}
+          >
+            <span
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                background: "rgba(255,255,255,0.04)",
-                border: "0.5px solid rgba(255,255,255,0.08)",
-                borderRadius: "100px",
-                padding: "5px 12px",
-                marginBottom: "28px",
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "#e8d5b0",
+                display: "inline-block",
               }}
-            >
-              <span
-                style={{
-                  width: "6px",
-                  height: "6px",
-                  borderRadius: "50%",
-                  background: "#e8d5b0",
-                  display: "inline-block",
-                }}
-              />
-              <span style={{ color: "#999999", fontSize: "15px" }}>
-                Available for projects
-              </span>
-            </div>
-
-            <h1
-              style={{
-                fontSize: "clamp(36px, 5vw, 66px)",
-                fontWeight: 300,
-                letterSpacing: "-2px",
-                lineHeight: 1.1,
-                color: "#ffffff",
-                marginBottom: "20px",
-              }}
-            >
-              I build AI systems that{" "}
-              <span style={{ color: "#e8d5b0" }}>actually</span> work.
-            </h1>
-
-            <p
-              style={{
-                fontSize: "16px",
-                color: "#999999",
-                marginBottom: "6px",
-                fontWeight: 400,
-              }}
-            >
-              Not demos. Not experiments.
-            </p>
-            <p
-              style={{
-                fontSize: "16px",
-                color: "#aaaaaa",
-                marginBottom: "40px",
-                fontWeight: 400,
-              }}
-            >
-              Systems that execute.
-            </p>
-
-            <div className="hero-btns" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              <a
-                href="#projects"
-                style={{
-                  background: "#ffffff",
-                  color: "#0a0a0a",
-                  borderRadius: "100px",
-                  padding: "11px 28px",
-                  fontSize: "15px",
-                  fontWeight: 500,
-                  textDecoration: "none",
-                  transition: "opacity 0.2s ease",
-                  display: "inline-block",
-                }}
-                onMouseEnter={(e) =>
-                  ((e.target as HTMLElement).style.opacity = "0.85")
-                }
-                onMouseLeave={(e) =>
-                  ((e.target as HTMLElement).style.opacity = "1")
-                }
-              >
-                See My Work
-              </a>
-              <a
-                href="#contact"
-                style={{
-                  border: "0.5px solid rgba(255,255,255,0.15)",
-                  color: "#888888",
-                  borderRadius: "100px",
-                  padding: "11px 28px",
-                  fontSize: "15px",
-                  textDecoration: "none",
-                  transition: "all 0.2s ease",
-                  display: "inline-block",
-                }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLElement).style.borderColor = "rgba(255,255,255,0.3)";
-                  (e.target as HTMLElement).style.color = "#cccccc";
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
-                  (e.target as HTMLElement).style.color = "#cccccc";
-                }}
-              >
-                Let&apos;s Talk
-              </a>
-            </div>
+            />
+            <span style={{ color: "#999999", fontSize: "15px" }}>
+              Available for projects
+            </span>
           </div>
 
-          {/* Right: Photo + Stats */}
-          <div className="hero-photo-col">
-            <div className="hero-photo-wrap">
-              <Image
-                src="/photo.jpg"
-                alt="Shreyansh Kanoongo"
-                width={280}
-                height={350}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center top",
-                }}
-                priority
-              />
-            </div>
+          <h1
+            style={{
+              fontSize: "clamp(36px, 5vw, 56px)",
+              fontWeight: 300,
+              letterSpacing: "-2px",
+              lineHeight: 1.1,
+              color: "#ffffff",
+              marginBottom: "16px",
+            }}
+          >
+            I build AI systems that{" "}
+            <span style={{ color: "#e8d5b0" }}>actually</span> work.
+          </h1>
 
-            {/* Stats */}
-            <div className="hero-stats">
-              {[
-                { num: "15", label: "Systems Built" },
-                { num: "9", label: "Live in Production" },
-                { num: "2 Weeks", label: "Average Build" },
-              ].map((stat, i) => (
-                <div
-                  key={i}
-                  style={{
-                    textAlign: "center",
-                    borderRight:
-                      i < 2
-                        ? "0.5px solid rgba(255,255,255,0.06)"
-                        : "none",
-                    padding: "0 8px",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "26px",
-                      fontWeight: 300,
-                      color: "#ffffff",
-                      lineHeight: 1,
-                      marginBottom: "4px",
-                    }}
-                  >
-                    {stat.num}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "11px",
-                      color: "#aaaaaa",
-                      textTransform: "uppercase",
-                      letterSpacing: "1.5px",
-                    }}
-                  >
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+          <p
+            style={{
+              fontSize: "16px",
+              color: "#999999",
+              marginBottom: "6px",
+              fontWeight: 400,
+            }}
+          >
+            Not demos. Not experiments.
+          </p>
+          <p
+            style={{
+              fontSize: "16px",
+              color: "#aaaaaa",
+              marginBottom: "36px",
+              fontWeight: 400,
+            }}
+          >
+            Systems that execute.
+          </p>
+
+          <div className="hero-btns" style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
+            <a
+              href="#projects"
+              style={{
+                background: "#ffffff",
+                color: "#0a0a0a",
+                borderRadius: "100px",
+                padding: "11px 28px",
+                fontSize: "15px",
+                fontWeight: 500,
+                textDecoration: "none",
+                transition: "opacity 0.2s ease",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) =>
+                ((e.target as HTMLElement).style.opacity = "0.85")
+              }
+              onMouseLeave={(e) =>
+                ((e.target as HTMLElement).style.opacity = "1")
+              }
+            >
+              See My Work
+            </a>
+            <a
+              href="#contact"
+              style={{
+                border: "0.5px solid rgba(255,255,255,0.15)",
+                color: "#888888",
+                borderRadius: "100px",
+                padding: "11px 28px",
+                fontSize: "15px",
+                textDecoration: "none",
+                transition: "all 0.2s ease",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLElement).style.borderColor = "rgba(255,255,255,0.3)";
+                (e.target as HTMLElement).style.color = "#cccccc";
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
+                (e.target as HTMLElement).style.color = "#cccccc";
+              }}
+            >
+              Let&apos;s Talk
+            </a>
           </div>
         </div>
 
-        <div style={{ marginTop: "24px", paddingBottom: "20px" }}>
+        {/* Stats row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "32px",
+            marginTop: "56px",
+            flexWrap: "wrap",
+          }}
+        >
+          <span style={{ display: "inline-flex", alignItems: "baseline", gap: "6px" }}>
+            <span style={{ fontSize: "20px", fontWeight: 300, color: "#ffffff" }}>15</span>
+            <span style={{ fontSize: "12px", color: "#aaaaaa", textTransform: "uppercase", letterSpacing: "1.5px" }}>Systems Built</span>
+          </span>
+          <span style={{ color: "#444444", fontSize: "14px" }}>·</span>
+          <span style={{ display: "inline-flex", alignItems: "baseline", gap: "6px" }}>
+            <span style={{ fontSize: "20px", fontWeight: 300, color: "#ffffff" }}>9</span>
+            <span style={{ fontSize: "12px", color: "#aaaaaa", textTransform: "uppercase", letterSpacing: "1.5px" }}>Live in Production</span>
+          </span>
+          <span style={{ color: "#444444", fontSize: "14px" }}>·</span>
+          <span style={{ display: "inline-flex", alignItems: "baseline", gap: "6px" }}>
+            <span style={{ fontSize: "20px", fontWeight: 300, color: "#ffffff" }}>2-Week</span>
+            <span style={{ fontSize: "12px", color: "#aaaaaa", textTransform: "uppercase", letterSpacing: "1.5px" }}>Average Build</span>
+          </span>
+        </div>
+
+        {/* System diagram */}
+        <div style={{ marginTop: "72px", maxWidth: "1200px", width: "100%", margin: "72px auto 0" }}>
           <HeroSystem />
         </div>
       </section>
@@ -679,9 +609,24 @@ export default function Home() {
                 display: "flex",
                 flexDirection: "column",
                 gap: "0",
-                borderTop: "0.5px solid rgba(255,255,255,0.05)",
               }}
             >
+              <div className="about-photo" style={{ marginBottom: "24px" }}>
+                <Image
+                  src="/photo.jpg"
+                  alt="Shreyansh Kanoongo"
+                  width={400}
+                  height={500}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "8px",
+                    objectFit: "cover",
+                    objectPosition: "center top",
+                  }}
+                />
+              </div>
+              <div style={{ borderTop: "0.5px solid rgba(255,255,255,0.05)" }}>
               {[
                 { label: "Location", value: "Jaipur, Rajasthan, India · Remote worldwide" },
                 { label: "Studio", value: "Automiq Labs", link: "https://automiqlabs.com" },
@@ -714,6 +659,7 @@ export default function Home() {
                   )}
                 </div>
               ))}
+              </div>
             </div>
           </div>
         </div>
