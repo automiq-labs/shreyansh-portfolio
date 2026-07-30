@@ -302,7 +302,7 @@ export default function Home() {
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 50,
-          width: "min(660px, calc(100% - 40px))",
+          width: "min(780px, calc(100% - 40px))",
           background: scrolled
             ? "rgba(255,255,255,0.06)"
             : "rgba(255,255,255,0.03)",
@@ -316,7 +316,7 @@ export default function Home() {
           transition: "background 0.3s ease",
         }}
       >
-        <span style={{ color: "#f2f2f2", fontSize: "15px", fontWeight: 400 }}>
+        <span style={{ color: "#f2f2f2", fontSize: "15px", fontWeight: 400, whiteSpace: "nowrap" }}>
           Shreyansh Kanoongo
         </span>
         <div className="nav-links">
@@ -356,6 +356,7 @@ export default function Home() {
               borderRadius: "100px",
               padding: "5px 16px",
               transition: "all 0.2s ease",
+              whiteSpace: "nowrap",
             }}
             onMouseEnter={(e) => {
               (e.target as HTMLElement).style.borderColor = "rgba(232,213,176,0.8)";
