@@ -24,6 +24,11 @@ function getTooltipText(node: SystemNode): string {
   return `${project.name} — ${project.status}`;
 }
 
+// Stagger order: inputs (0–3), core (4), outputs (5–8)
+function getNodeDelay(index: number): number {
+  return 900 + index * 60;
+}
+
 export default function HeroSystem() {
   const [hover, setHover] = useState<{
     text: string;
@@ -46,6 +51,8 @@ export default function HeroSystem() {
     document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  const coreNode = nodes.find((n) => n.core)!;
+
   return (
     <div
       className="hero-system-wrap"
@@ -59,6 +66,31 @@ export default function HeroSystem() {
         .sys-node { cursor: pointer; outline: none; }
         .sys-node:hover rect,
         .sys-node:focus-visible rect { stroke-opacity: 1 !important; }
+
+        .sys-node-enter {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        .hero-mounted .sys-node-enter {
+          opacity: 1;
+          transform: translateY(0);
+          transition: opacity 500ms cubic-bezier(0.16,1,0.3,1), transform 500ms cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .sys-glow {
+          opacity: 0;
+        }
+        .hero-mounted .sys-glow {
+          opacity: 1;
+          transition: opacity 800ms ease 900ms;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .sys-node-enter { opacity: 1; transform: none; }
+          .hero-mounted .sys-node-enter { transition: none; }
+          .sys-glow { opacity: 1; }
+          .hero-mounted .sys-glow { transition: none; }
+        }
       `}</style>
 
       <svg
@@ -69,6 +101,22 @@ export default function HeroSystem() {
         style={{ width: "100%", height: "auto" }}
       >
         <title>Architecture diagram showing how data flows through Shreyansh&apos;s production systems</title>
+
+        <defs>
+          <radialGradient id="core-glow-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="5%" stopColor="#e8d5b0" stopOpacity={0.05} />
+            <stop offset="70%" stopColor="#e8d5b0" stopOpacity={0} />
+          </radialGradient>
+        </defs>
+
+        {/* Core glow */}
+        <circle
+          className="sys-glow"
+          cx={coreNode.x + coreNode.w / 2}
+          cy={coreNode.y + coreNode.h / 2}
+          r={170}
+          fill="url(#core-glow-grad)"
+        />
 
         {/* Edges + pulses */}
         {edges.map((edge) => {
@@ -92,7 +140,7 @@ export default function HeroSystem() {
                       dur="3s"
                       repeatCount="indefinite"
                       path={d}
-                      begin={`${edge.delay}s`}
+                      begin={`${1.5 + edge.delay}s`}
                     />
                   </circle>
                   <circle r={2.5} fill="#e8d5b0" opacity={0.5}>
@@ -100,7 +148,7 @@ export default function HeroSystem() {
                       dur="3s"
                       repeatCount="indefinite"
                       path={d}
-                      begin={`${edge.delay + 1.5}s`}
+                      begin={`${1.5 + edge.delay + 1.5}s`}
                     />
                   </circle>
                 </>
@@ -110,13 +158,15 @@ export default function HeroSystem() {
         })}
 
         {/* Nodes */}
-        {nodes.map((node) => {
+        {nodes.map((node, index) => {
           const tooltipText = getTooltipText(node);
           const fontSize = node.core ? 13 : 11;
+          const delay = getNodeDelay(index);
           return (
             <g
               key={node.id}
-              className="sys-node"
+              className="sys-node sys-node-enter"
+              style={{ transitionDelay: reduceMotion ? "0ms" : `${delay}ms` }}
               tabIndex={0}
               role="button"
               aria-label={tooltipText}

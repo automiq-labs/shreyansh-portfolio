@@ -68,11 +68,16 @@ function useRevealList(containerRef: React.RefObject<HTMLDivElement | null>) {
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [openId, setOpenId] = useState<number | null>(null);
+  const [heroMounted, setHeroMounted] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    requestAnimationFrame(() => setHeroMounted(true));
   }, []);
 
   const aboutRef = useFadeIn();
@@ -104,7 +109,53 @@ export default function Home() {
         /* ── NAV ── */
         .nav-links { display: flex; align-items: center; gap: 24px; }
 
-        /* ── HERO ── */
+        /* ── HERO ENTRANCE ── */
+        .hero-enter { opacity: 0; transform: translateY(10px); }
+        .hero-mounted .hero-enter {
+          opacity: 1; transform: translateY(0);
+          transition: opacity 500ms cubic-bezier(0.16,1,0.3,1), transform 500ms cubic-bezier(0.16,1,0.3,1);
+        }
+        .hero-mounted .hero-d0   { transition-delay: 0ms; }
+        .hero-mounted .hero-d120 { transition-delay: 120ms; }
+        .hero-mounted .hero-d260 { transition-delay: 260ms; }
+        .hero-mounted .hero-d400 { transition-delay: 400ms; }
+        .hero-mounted .hero-d560 { transition-delay: 560ms; }
+
+        .hero-connector { display: none; }
+        @media (min-width: 1024px) {
+          .hero-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+          }
+          .hero-connector-line {
+            width: 1px; height: 72px;
+            background: #e8d5b0; opacity: 0.3;
+            transform: scaleY(0); transform-origin: top;
+          }
+          .hero-connector-dot {
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: #e8d5b0;
+            opacity: 0;
+            margin-top: -1px;
+          }
+          .hero-mounted .hero-connector-line {
+            transform: scaleY(1);
+            transition: transform 400ms ease-out 700ms;
+          }
+          .hero-mounted .hero-connector-dot {
+            opacity: 0.5;
+            transition: opacity 300ms ease 1100ms;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-enter { opacity: 1; transform: none; }
+          .hero-mounted .hero-enter { transition: none; }
+          .hero-mounted .hero-connector-line { transform: scaleY(1); transition: none; }
+          .hero-mounted .hero-connector-dot { opacity: 0.5; transition: none; }
+        }
 
         /* ── ABOUT ── */
         .about-grid {
@@ -385,7 +436,7 @@ export default function Home() {
       {/* ── HERO ── */}
       <section
         id="home"
-        className="hero-section"
+        className={`hero-section${heroMounted ? " hero-mounted" : ""}`}
         style={{
           minHeight: "100vh",
           display: "flex",
@@ -399,6 +450,7 @@ export default function Home() {
         {/* Text block */}
         <div style={{ maxWidth: "760px", margin: "0 auto", textAlign: "center" }}>
           <p
+            className="hero-enter hero-d0"
             style={{
               color: "#aaaaaa",
               fontSize: "15px",
@@ -411,6 +463,7 @@ export default function Home() {
           </p>
 
           <div
+            className="hero-enter hero-d0"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -437,6 +490,7 @@ export default function Home() {
           </div>
 
           <h1
+            className="hero-enter hero-d120"
             style={{
               fontSize: "clamp(36px, 4.5vw, 58px)",
               fontWeight: 300,
@@ -450,28 +504,30 @@ export default function Home() {
             <span style={{ whiteSpace: "nowrap" }}>that <span style={{ color: "#e8d5b0" }}>actually</span> work.</span>
           </h1>
 
-          <p
-            style={{
-              fontSize: "16px",
-              color: "#999999",
-              marginBottom: "6px",
-              fontWeight: 400,
-            }}
-          >
-            Not demos. Not experiments.
-          </p>
-          <p
-            style={{
-              fontSize: "16px",
-              color: "#aaaaaa",
-              marginBottom: "36px",
-              fontWeight: 400,
-            }}
-          >
-            Systems that execute.
-          </p>
+          <div className="hero-enter hero-d260">
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#999999",
+                marginBottom: "6px",
+                fontWeight: 400,
+              }}
+            >
+              Not demos. Not experiments.
+            </p>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#aaaaaa",
+                marginBottom: "36px",
+                fontWeight: 400,
+              }}
+            >
+              Systems that execute.
+            </p>
+          </div>
 
-          <div className="hero-btns" style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
+          <div className="hero-btns hero-enter hero-d400" style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
             <a
               href="#projects"
               style={{
@@ -522,7 +578,7 @@ export default function Home() {
 
         {/* Stats row */}
         <div
-          className="hero-stats-row"
+          className="hero-stats-row hero-enter hero-d560"
           style={{
             display: "flex",
             alignItems: "center",
@@ -548,8 +604,14 @@ export default function Home() {
           </span>
         </div>
 
+        {/* Connector */}
+        <div className="hero-connector">
+          <div className="hero-connector-line" />
+          <div className="hero-connector-dot" />
+        </div>
+
         {/* System diagram */}
-        <div style={{ marginTop: "72px", maxWidth: "1200px", width: "100%", margin: "72px auto 0" }}>
+        <div style={{ maxWidth: "1200px", width: "100%", margin: "0 auto" }}>
           <HeroSystem />
         </div>
       </section>
