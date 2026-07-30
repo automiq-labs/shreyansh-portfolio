@@ -7,6 +7,7 @@ import { services } from "../data/services";
 import { skills } from "../data/skills";
 import { certifications } from "../data/certifications";
 import { getStatusStyle, getMetaStyle } from "../lib/badges";
+import HeroSystem from "./components/HeroSystem";
 
 // ── FADE IN HOOK ──
 function useFadeIn() {
@@ -573,6 +574,10 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        <div style={{ marginTop: "48px" }}>
+          <HeroSystem />
+        </div>
       </section>
 
       {/* ── ABOUT ── */}
@@ -797,6 +802,7 @@ export default function Home() {
           return (
             <div
               key={project.id}
+              id={project.slug}
               style={{
                 borderBottom: "0.5px solid rgba(255,255,255,0.06)",
                 background: isOpen
@@ -1014,6 +1020,7 @@ export default function Home() {
           return (
             <div
               key={project.id}
+              id={project.slug}
               style={{
                 borderBottom: "0.5px solid rgba(255,255,255,0.06)",
                 background: isOpen
