@@ -68,6 +68,7 @@ function useRevealList(containerRef: React.RefObject<HTMLDivElement | null>) {
 // ── MAIN COMPONENT ──
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
+  const [openId, setOpenId] = useState<number | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -140,6 +141,21 @@ export default function Home() {
           .project-row:hover { background: rgba(255,255,255,0.015); }
           .project-row:hover .proj-title { color: #e8d5b0; }
           .project-row:hover .proj-arrow { transform: translateX(6px); }
+        }
+        .project-row button[aria-expanded="true"] .proj-arrow { transform: rotate(90deg); }
+        .proj-expand {
+          display: grid;
+          grid-template-rows: 0fr;
+          opacity: 0;
+          transition: grid-template-rows 300ms ease, opacity 300ms ease;
+        }
+        .proj-expand[data-open="true"] {
+          grid-template-rows: 1fr;
+          opacity: 1;
+        }
+        .proj-expand-inner { overflow: hidden; }
+        @media (prefers-reduced-motion: reduce) {
+          .proj-expand { transition: none; }
         }
 
         /* ── SERVICES ── */
@@ -239,12 +255,13 @@ export default function Home() {
 
           /* PROJECTS */
           .projects-section { padding: 60px 24px !important; }
-          .project-row {
-            grid-template-columns: 36px 1fr 24px;
-            gap: 10px;
-            padding: 16px 12px;
+          .project-row button {
+            grid-template-columns: 36px 1fr 24px !important;
+            gap: 10px !important;
+            padding: 16px 12px !important;
           }
           .project-row .proj-badges { display: none; }
+          .proj-expand-inner > div { padding-left: 48px !important; }
 
           /* SERVICES */
           .services-section { padding: 60px 24px !important; }
@@ -746,53 +763,86 @@ export default function Home() {
         </p>
 
         <div ref={featuredListRef}>
-          {projects.filter(p => p.featured).map((project, i) => (
-            <div
-              key={project.id}
-              id={project.slug}
-              className="project-row"
-              data-delay={`${Math.min(i * 60, 360)}ms`}
-              onClick={() => document.getElementById(project.slug)?.scrollIntoView({ behavior: "smooth" })}
-            >
-              <span style={{ color: "#e8d5b0", fontSize: "13px", opacity: 0.4 }}>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <span className="proj-title" style={{ color: "#ffffff", fontSize: "16px", display: "block" }}>
-                  {project.name}
-                </span>
-                <span style={{ color: "#777777", fontSize: "13px", marginTop: "6px", display: "block", maxWidth: "480px" }}>
-                  {project.tagline}
-                </span>
-              </div>
-              <div className="proj-badges" style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
-                <span
-                  style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }}
-                  className={getStatusStyle(project.status)}
+          {projects.filter(p => p.featured).map((project, i) => {
+            const isOpen = openId === project.id;
+            return (
+              <div key={project.id} id={project.slug} data-delay={`${Math.min(i * 60, 360)}ms`} className="project-row" style={{ display: "block", padding: 0 }}>
+                <button
+                  onClick={() => setOpenId(isOpen ? null : project.id)}
+                  aria-expanded={isOpen}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "48px 1fr auto 32px",
+                    gap: "16px",
+                    padding: "28px 20px",
+                    alignItems: "center",
+                    width: "100%",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    color: "inherit",
+                    font: "inherit",
+                  }}
                 >
-                  {project.status.startsWith("Live") && (
-                    <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#4ade80", display: "inline-block", marginRight: "5px", verticalAlign: "middle" }} />
-                  )}
-                  {project.status}
-                </span>
-                <span
-                  style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }}
-                  className={getMetaStyle()}
-                >
-                  {project.type}
-                </span>
-                {project.speed && (
-                  <span
-                    style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }}
-                    className={getMetaStyle()}
-                  >
-                    {project.speed}
+                  <span style={{ color: "#e8d5b0", fontSize: "13px", opacity: 0.4 }}>
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                )}
+                  <div>
+                    <span className="proj-title" style={{ color: "#ffffff", fontSize: "16px", display: "block" }}>
+                      {project.name}
+                    </span>
+                    <span style={{ color: "#777777", fontSize: "13px", marginTop: "6px", display: "block", maxWidth: "480px" }}>
+                      {project.tagline}
+                    </span>
+                  </div>
+                  <div className="proj-badges" style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    <span style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }} className={getStatusStyle(project.status)}>
+                      {project.status.startsWith("Live") && (
+                        <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#4ade80", display: "inline-block", marginRight: "5px", verticalAlign: "middle" }} />
+                      )}
+                      {project.status}
+                    </span>
+                    <span style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }} className={getMetaStyle()}>
+                      {project.type}
+                    </span>
+                    {project.speed && (
+                      <span style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }} className={getMetaStyle()}>
+                        {project.speed}
+                      </span>
+                    )}
+                  </div>
+                  <span className="proj-arrow" style={{ color: "#777777", fontSize: "14px", display: "inline-block", transform: isOpen ? "rotate(90deg)" : "none", transition: "transform 200ms ease" }}>→</span>
+                </button>
+                <div className="proj-expand" data-open={isOpen}>
+                  <div className="proj-expand-inner">
+                    <div style={{ padding: "0 20px 28px 68px" }}>
+                      <p style={{ color: "#999999", fontSize: "14px", lineHeight: 1.8, maxWidth: "640px", marginBottom: "12px" }}>
+                        {project.description}
+                      </p>
+                      <p style={{ color: "#777777", fontSize: "13px", marginBottom: "8px" }}>
+                        {project.stack.join(" · ")}
+                      </p>
+                      <p style={{ color: "#777777", fontSize: "13px" }}>
+                        Role — {project.role}
+                      </p>
+                      {project.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{ color: "#e8d5b0", fontSize: "13px", textDecoration: "none", display: "inline-block", marginTop: "12px" }}
+                        >
+                          Visit live →
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <span className="proj-arrow" style={{ color: "#777777", fontSize: "14px", display: "inline-block" }}>→</span>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* ── All Work ── */}
@@ -810,53 +860,86 @@ export default function Home() {
         </p>
 
         <div ref={allWorkListRef}>
-          {projects.filter(p => p.group).map((project, i) => (
-            <div
-              key={project.id}
-              id={project.slug}
-              className="project-row"
-              data-delay={`${Math.min(i * 60, 360)}ms`}
-              onClick={() => document.getElementById(project.slug)?.scrollIntoView({ behavior: "smooth" })}
-            >
-              <span style={{ color: "#e8d5b0", fontSize: "13px", opacity: 0.4 }}>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <span className="proj-title" style={{ color: "#ffffff", fontSize: "16px", display: "block" }}>
-                  {project.name}
-                </span>
-                <span style={{ color: "#777777", fontSize: "13px", marginTop: "6px", display: "block", maxWidth: "480px" }}>
-                  {project.tagline}
-                </span>
-              </div>
-              <div className="proj-badges" style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
-                <span
-                  style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }}
-                  className={getStatusStyle(project.status)}
+          {projects.filter(p => p.group).map((project, i) => {
+            const isOpen = openId === project.id;
+            return (
+              <div key={project.id} id={project.slug} data-delay={`${Math.min(i * 60, 360)}ms`} className="project-row" style={{ display: "block", padding: 0 }}>
+                <button
+                  onClick={() => setOpenId(isOpen ? null : project.id)}
+                  aria-expanded={isOpen}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "48px 1fr auto 32px",
+                    gap: "16px",
+                    padding: "28px 20px",
+                    alignItems: "center",
+                    width: "100%",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    color: "inherit",
+                    font: "inherit",
+                  }}
                 >
-                  {project.status.startsWith("Live") && (
-                    <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#4ade80", display: "inline-block", marginRight: "5px", verticalAlign: "middle" }} />
-                  )}
-                  {project.status}
-                </span>
-                <span
-                  style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }}
-                  className={getMetaStyle()}
-                >
-                  {project.type}
-                </span>
-                {project.speed && (
-                  <span
-                    style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }}
-                    className={getMetaStyle()}
-                  >
-                    {project.speed}
+                  <span style={{ color: "#e8d5b0", fontSize: "13px", opacity: 0.4 }}>
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                )}
+                  <div>
+                    <span className="proj-title" style={{ color: "#ffffff", fontSize: "16px", display: "block" }}>
+                      {project.name}
+                    </span>
+                    <span style={{ color: "#777777", fontSize: "13px", marginTop: "6px", display: "block", maxWidth: "480px" }}>
+                      {project.tagline}
+                    </span>
+                  </div>
+                  <div className="proj-badges" style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    <span style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }} className={getStatusStyle(project.status)}>
+                      {project.status.startsWith("Live") && (
+                        <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#4ade80", display: "inline-block", marginRight: "5px", verticalAlign: "middle" }} />
+                      )}
+                      {project.status}
+                    </span>
+                    <span style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }} className={getMetaStyle()}>
+                      {project.type}
+                    </span>
+                    {project.speed && (
+                      <span style={{ border: "0.5px solid", borderRadius: "100px", padding: "2px 8px", fontSize: "12px" }} className={getMetaStyle()}>
+                        {project.speed}
+                      </span>
+                    )}
+                  </div>
+                  <span className="proj-arrow" style={{ color: "#777777", fontSize: "14px", display: "inline-block", transform: isOpen ? "rotate(90deg)" : "none", transition: "transform 200ms ease" }}>→</span>
+                </button>
+                <div className="proj-expand" data-open={isOpen}>
+                  <div className="proj-expand-inner">
+                    <div style={{ padding: "0 20px 28px 68px" }}>
+                      <p style={{ color: "#999999", fontSize: "14px", lineHeight: 1.8, maxWidth: "640px", marginBottom: "12px" }}>
+                        {project.description}
+                      </p>
+                      <p style={{ color: "#777777", fontSize: "13px", marginBottom: "8px" }}>
+                        {project.stack.join(" · ")}
+                      </p>
+                      <p style={{ color: "#777777", fontSize: "13px" }}>
+                        Role — {project.role}
+                      </p>
+                      {project.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{ color: "#e8d5b0", fontSize: "13px", textDecoration: "none", display: "inline-block", marginTop: "12px" }}
+                        >
+                          Visit live →
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <span className="proj-arrow" style={{ color: "#777777", fontSize: "14px", display: "inline-block" }}>→</span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
