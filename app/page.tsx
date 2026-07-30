@@ -6,7 +6,7 @@ import { projects } from "../data/projects";
 import { services } from "../data/services";
 import { skills } from "../data/skills";
 import { certifications } from "../data/certifications";
-import { getBadgeStyle } from "../lib/badges";
+import { getStatusStyle, getMetaStyle } from "../lib/badges";
 
 // ── FADE IN HOOK ──
 function useFadeIn() {
@@ -110,7 +110,7 @@ export default function Home() {
         /* ── PROJECTS ── */
         .project-header-row {
           display: grid;
-          grid-template-columns: 48px 1fr 160px 60px 24px;
+          grid-template-columns: 48px 1fr 160px 24px;
           gap: 16px;
           padding: 0 20px 12px;
           border-bottom: 0.5px solid rgba(255,255,255,0.06);
@@ -118,7 +118,7 @@ export default function Home() {
         }
         .project-row-btn {
           display: grid;
-          grid-template-columns: 48px 1fr 160px 60px 24px;
+          grid-template-columns: 48px 1fr 160px 24px;
           gap: 16px;
           padding: 20px;
           width: 100%;
@@ -129,7 +129,6 @@ export default function Home() {
           align-items: center;
         }
         .project-col-cat { display: block; }
-        .project-col-year { display: block; }
         .project-expanded-inner {
           padding: 0 20px 28px;
           display: grid;
@@ -253,7 +252,6 @@ export default function Home() {
             padding: 16px 12px;
           }
           .project-col-cat { display: none; }
-          .project-col-year { display: none; }
           .project-expanded-inner {
             grid-template-columns: 1fr;
             gap: 20px;
@@ -752,9 +750,22 @@ export default function Home() {
           world.
         </p>
 
+        {/* ── Featured ── */}
+        <p
+          style={{
+            color: "#aaaaaa",
+            fontSize: "12px",
+            letterSpacing: "3px",
+            textTransform: "uppercase",
+            marginBottom: "16px",
+          }}
+        >
+          Featured
+        </p>
+
         {/* Header row — hidden on mobile via CSS */}
         <div className="project-header-row">
-          {["No.", "Project", "Category", "Year", ""].map((h) => (
+          {["No.", "Project", "Category", ""].map((h) => (
             <span
               key={h}
               style={{
@@ -769,8 +780,7 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Project rows */}
-        {projects.map((project) => {
+        {projects.filter(p => p.featured).map((project, i) => {
           const isOpen = openProject === project.id;
           return (
             <div
@@ -783,19 +793,18 @@ export default function Home() {
                 transition: "background 0.3s ease",
               }}
             >
-              {/* Row header button */}
               <button
                 onClick={() => toggleProject(project.id)}
                 className="project-row-btn"
               >
                 <span
                   style={{
-                    color: project.id === 1 ? "#e8d5b0" : "#777777",
+                    color: "#777777",
                     fontSize: "15px",
                     fontWeight: 400,
                   }}
                 >
-                  {project.number}
+                  {String(i + 1).padStart(2, "0")}
                 </span>
                 <div
                   style={{
@@ -808,7 +817,7 @@ export default function Home() {
                   <span
                     style={{
                       color: "#ffffff",
-                      fontSize: project.id === 1 ? "16px" : "14px",
+                      fontSize: "14px",
                       fontWeight: 400,
                     }}
                   >
@@ -821,9 +830,9 @@ export default function Home() {
                       padding: "2px 8px",
                       fontSize: "12px",
                     }}
-                    className={getBadgeStyle(project.badgeColor)}
+                    className={getStatusStyle(project.status)}
                   >
-                    {project.id === 1 && (
+                    {project.status === "Live in production" && (
                       <span
                         style={{
                           width: "5px",
@@ -836,16 +845,36 @@ export default function Home() {
                         }}
                       />
                     )}
-                    {project.badge}
+                    {project.status}
                   </span>
+                  <span
+                    style={{
+                      border: "0.5px solid",
+                      borderRadius: "100px",
+                      padding: "2px 8px",
+                      fontSize: "12px",
+                    }}
+                    className={getMetaStyle()}
+                  >
+                    {project.type}
+                  </span>
+                  {project.speed && (
+                    <span
+                      style={{
+                        border: "0.5px solid",
+                        borderRadius: "100px",
+                        padding: "2px 8px",
+                        fontSize: "12px",
+                      }}
+                      className={getMetaStyle()}
+                    >
+                      {project.speed}
+                    </span>
+                  )}
                 </div>
                 {/* Category — hidden on mobile */}
                 <span className="project-col-cat" style={{ color: "#777777", fontSize: "14px" }}>
                   {project.tagline.split(".")[0]}
-                </span>
-                {/* Year — hidden on mobile */}
-                <span className="project-col-year" style={{ color: "#aaaaaa", fontSize: "14px" }}>
-                  2026
                 </span>
                 <span
                   style={{
@@ -860,7 +889,223 @@ export default function Home() {
                 </span>
               </button>
 
-              {/* Expanded content */}
+              <div
+                style={{
+                  maxHeight: isOpen ? "800px" : "0",
+                  overflow: "hidden",
+                  transition: "max-height 0.35s ease",
+                }}
+              >
+                <div className="project-expanded-inner">
+                  <div>
+                    <p
+                      style={{
+                        color: "#888888",
+                        fontSize: "15px",
+                        lineHeight: 1.8,
+                        marginBottom: "16px",
+                      }}
+                    >
+                      {project.description}
+                    </p>
+                    <p style={{ color: "#777777", fontSize: "14px" }}>
+                      <span style={{ color: "#aaaaaa" }}>Role: </span>
+                      {project.role}
+                    </p>
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "6px",
+                        marginBottom: "20px",
+                      }}
+                    >
+                      {project.stack.map((tech) => (
+                        <span
+                          key={tech}
+                          style={{
+                            border: "0.5px solid rgba(255,255,255,0.1)",
+                            color: "#888888",
+                            fontSize: "13px",
+                            borderRadius: "100px",
+                            padding: "4px 10px",
+                          }}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: "#e8d5b0",
+                          fontSize: "15px",
+                          textDecoration: "none",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "6px",
+                        }}
+                        onMouseEnter={(e) =>
+                          ((e.target as HTMLElement).style.opacity = "0.7")
+                        }
+                        onMouseLeave={(e) =>
+                          ((e.target as HTMLElement).style.opacity = "1")
+                        }
+                      >
+                        View Live Project →
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {/* ── All Work ── */}
+        <p
+          style={{
+            color: "#aaaaaa",
+            fontSize: "12px",
+            letterSpacing: "3px",
+            textTransform: "uppercase",
+            marginTop: "48px",
+            marginBottom: "16px",
+          }}
+        >
+          All Work
+        </p>
+
+        <div className="project-header-row">
+          {["No.", "Project", "Category", ""].map((h) => (
+            <span
+              key={h}
+              style={{
+                color: "#aaaaaa",
+                fontSize: "15px",
+                letterSpacing: "3px",
+                textTransform: "uppercase",
+              }}
+            >
+              {h}
+            </span>
+          ))}
+        </div>
+
+        {projects.filter(p => p.group).map((project, i) => {
+          const isOpen = openProject === project.id;
+          return (
+            <div
+              key={project.id}
+              style={{
+                borderBottom: "0.5px solid rgba(255,255,255,0.06)",
+                background: isOpen
+                  ? "rgba(255,255,255,0.015)"
+                  : "transparent",
+                transition: "background 0.3s ease",
+              }}
+            >
+              <button
+                onClick={() => toggleProject(project.id)}
+                className="project-row-btn"
+              >
+                <span
+                  style={{
+                    color: "#777777",
+                    fontSize: "15px",
+                    fontWeight: 400,
+                  }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#ffffff",
+                      fontSize: "14px",
+                      fontWeight: 400,
+                    }}
+                  >
+                    {project.name}
+                  </span>
+                  <span
+                    style={{
+                      border: "0.5px solid",
+                      borderRadius: "100px",
+                      padding: "2px 8px",
+                      fontSize: "12px",
+                    }}
+                    className={getStatusStyle(project.status)}
+                  >
+                    {project.status === "Live in production" && (
+                      <span
+                        style={{
+                          width: "5px",
+                          height: "5px",
+                          borderRadius: "50%",
+                          background: "#4ade80",
+                          display: "inline-block",
+                          marginRight: "5px",
+                          verticalAlign: "middle",
+                        }}
+                      />
+                    )}
+                    {project.status}
+                  </span>
+                  <span
+                    style={{
+                      border: "0.5px solid",
+                      borderRadius: "100px",
+                      padding: "2px 8px",
+                      fontSize: "12px",
+                    }}
+                    className={getMetaStyle()}
+                  >
+                    {project.type}
+                  </span>
+                  {project.speed && (
+                    <span
+                      style={{
+                        border: "0.5px solid",
+                        borderRadius: "100px",
+                        padding: "2px 8px",
+                        fontSize: "12px",
+                      }}
+                      className={getMetaStyle()}
+                    >
+                      {project.speed}
+                    </span>
+                  )}
+                </div>
+                {/* Category — hidden on mobile */}
+                <span className="project-col-cat" style={{ color: "#777777", fontSize: "14px" }}>
+                  {project.tagline.split(".")[0]}
+                </span>
+                <span
+                  style={{
+                    color: "#777777",
+                    fontSize: "14px",
+                    transition: "transform 0.2s ease",
+                    display: "inline-block",
+                    transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                >
+                  ↓
+                </span>
+              </button>
+
               <div
                 style={{
                   maxHeight: isOpen ? "800px" : "0",
