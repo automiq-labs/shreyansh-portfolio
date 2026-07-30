@@ -395,7 +395,7 @@ export default function Home() {
 
           <h1
             style={{
-              fontSize: "clamp(36px, 5vw, 56px)",
+              fontSize: "clamp(36px, 4.5vw, 58px)",
               fontWeight: 300,
               letterSpacing: "-2px",
               lineHeight: 1.1,
@@ -403,8 +403,8 @@ export default function Home() {
               marginBottom: "16px",
             }}
           >
-            I build AI systems that{" "}
-            <span style={{ color: "#e8d5b0" }}>actually</span> work.
+            I build AI systems<br />
+            <span style={{ whiteSpace: "nowrap" }}>that <span style={{ color: "#e8d5b0" }}>actually</span> work.</span>
           </h1>
 
           <p
@@ -611,12 +611,12 @@ export default function Home() {
                 gap: "0",
               }}
             >
-              <div className="about-photo" style={{ marginBottom: "24px" }}>
+              <div className="about-photo" style={{ marginBottom: "24px", maxWidth: "240px" }}>
                 <Image
                   src="/photo.jpg"
                   alt="Shreyansh Kanoongo"
-                  width={400}
-                  height={500}
+                  width={240}
+                  height={300}
                   style={{
                     width: "100%",
                     height: "auto",
