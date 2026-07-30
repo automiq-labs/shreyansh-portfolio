@@ -1485,28 +1485,6 @@ export default function Home() {
         }}
       >
         <div style={{ maxWidth: "640px", margin: "0 auto" }}>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              marginBottom: "24px",
-            }}
-          >
-            <span
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "#4ade80",
-                display: "inline-block",
-              }}
-            />
-            <span style={{ color: "#999999", fontSize: "14px" }}>
-              Open to work · Immediately available
-            </span>
-          </div>
-
           <p
             style={{
               color: "#aaaaaa",
@@ -1541,57 +1519,9 @@ export default function Home() {
               marginBottom: "40px",
             }}
           >
-            Open to full-time roles, freelance projects, contracts, and
-            consulting. Globally flexible and immediately available.
+            Have a process you want automated or a system you need built?
+            Tell me what it is.
           </p>
-
-          {/* Work With Me */}
-          <div className="contact-cards">
-            {[
-              {
-                title: "Full-Time Roles",
-                desc: "Looking for a team where I can build and ship AI systems.",
-              },
-              {
-                title: "Freelance Projects",
-                desc: "Short or long-term. I work fast and deliver.",
-              },
-              {
-                title: "Contract & Consulting",
-                desc: "Advisory, audits, and hands-on contract work.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                style={{
-                  border: "0.5px solid rgba(255,255,255,0.07)",
-                  borderRadius: "10px",
-                  padding: "20px 16px",
-                  textAlign: "center",
-                }}
-              >
-                <h3
-                  style={{
-                    color: "#ffffff",
-                    fontSize: "15px",
-                    fontWeight: 400,
-                    marginBottom: "8px",
-                  }}
-                >
-                  {item.title}
-                </h3>
-                <p
-                  style={{
-                    color: "#999999",
-                    fontSize: "13px",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
 
           {/* Buttons */}
           <div className="contact-btns">
@@ -1658,7 +1588,6 @@ export default function Home() {
               { label: "Instagram", href: "https://instagram.com/_shreyanshh._", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> },
               { label: "GitHub", href: "https://github.com/shreyanshkanoongo-git", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg> },
               { label: "Email", href: "https://mail.google.com/mail/?view=cm&to=shreyansh.kanoongo@gmail.com", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> },
-              { label: "Download CV", href: "/shreyansh-cv.pdf", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> },
             ].map((link) => (
               <a
                 key={link.label}
