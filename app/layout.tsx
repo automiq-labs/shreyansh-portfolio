@@ -10,10 +10,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Shreyansh Kanoongo — AI Systems Builder",
-  description: "I build AI-powered systems, automation workflows, and full-stack applications. Based in Jaipur, India. Available for full-time roles, freelance, and contracts.",
+  description: "I build AI systems that run real businesses: automation, dashboards, and full-stack applications. 15 systems built, 9 live in production. Jaipur, India.",
   openGraph: {
     title: "Shreyansh Kanoongo — AI Systems Builder",
-    description: "I build AI-powered systems, automation workflows, and full-stack applications.",
+    description: "I build AI systems that run real businesses: automation, dashboards, and full-stack applications. 15 systems built, 9 live in production. Jaipur, India.",
     type: "website",
   },
 };
