@@ -134,6 +134,7 @@ export default function Home() {
           cursor: pointer;
           text-decoration: none;
         }
+        .project-row .proj-badges span { white-space: nowrap; }
         .project-row .proj-title { transition: color 200ms ease; }
         .project-row .proj-arrow { transition: transform 200ms ease; }
         @media (hover: hover) {
@@ -231,18 +232,56 @@ export default function Home() {
           /* ABOUT */
           .about-section { padding: 60px 24px !important; }
           .about-grid { grid-template-columns: 1fr; gap: 32px; }
-          .about-info-row { grid-template-columns: 90px 1fr; gap: 12px; }
-          .about-photo { max-width: 320px; }
+          .about-info-row {
+            grid-template-columns: 1fr !important;
+            gap: 4px !important;
+            padding: 14px 0 !important;
+          }
+          .about-info-row span:first-child {
+            font-size: 11px !important;
+            letter-spacing: 2px !important;
+          }
+          .about-photo {
+            display: block !important;
+            margin: 32px auto !important;
+            max-width: 260px !important;
+          }
 
           /* PROJECTS */
           .projects-section { padding: 60px 24px !important; }
-          .project-row button {
-            grid-template-columns: 36px 1fr 24px !important;
-            gap: 10px !important;
-            padding: 16px 12px !important;
+          .project-row {
+            display: block !important;
+            position: relative;
           }
-          .project-row .proj-badges { display: none; }
-          .proj-expand-inner > div { padding-left: 0 !important; }
+          .project-row button {
+            display: block !important;
+            padding: 24px 0 !important;
+            width: 100%;
+          }
+          .project-row .proj-num {
+            display: inline !important;
+            font-size: 12px !important;
+            margin-right: 12px;
+          }
+          .project-row .proj-title-wrap {
+            display: inline !important;
+          }
+          .project-row .proj-tagline {
+            display: block !important;
+            margin-top: 6px;
+          }
+          .project-row .proj-badges {
+            display: flex !important;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+          }
+          .project-row .proj-badges span {
+            font-size: 11px !important;
+            padding: 4px 10px !important;
+          }
+          .project-row .proj-arrow { display: none !important; }
+          .proj-expand-inner > div { padding-left: 0 !important; padding-right: 0 !important; }
 
           /* SKILLS */
           .skills-section { padding: 60px 24px !important; }
@@ -754,14 +793,14 @@ export default function Home() {
                     font: "inherit",
                   }}
                 >
-                  <span style={{ color: "#e8d5b0", fontSize: "13px", opacity: 0.4 }}>
+                  <span className="proj-num" style={{ color: "#e8d5b0", fontSize: "13px", opacity: 0.4 }}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <div>
+                  <div className="proj-title-wrap">
                     <span className="proj-title" style={{ color: "#ffffff", fontSize: "16px", display: "block" }}>
                       {project.name}
                     </span>
-                    <span style={{ color: "#777777", fontSize: "13px", marginTop: "6px", display: "block", maxWidth: "480px" }}>
+                    <span className="proj-tagline" style={{ color: "#777777", fontSize: "13px", marginTop: "6px", display: "block", maxWidth: "480px" }}>
                       {project.tagline}
                     </span>
                   </div>
@@ -851,14 +890,14 @@ export default function Home() {
                     font: "inherit",
                   }}
                 >
-                  <span style={{ color: "#e8d5b0", fontSize: "13px", opacity: 0.4 }}>
+                  <span className="proj-num" style={{ color: "#e8d5b0", fontSize: "13px", opacity: 0.4 }}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <div>
+                  <div className="proj-title-wrap">
                     <span className="proj-title" style={{ color: "#ffffff", fontSize: "16px", display: "block" }}>
                       {project.name}
                     </span>
-                    <span style={{ color: "#777777", fontSize: "13px", marginTop: "6px", display: "block", maxWidth: "480px" }}>
+                    <span className="proj-tagline" style={{ color: "#777777", fontSize: "13px", marginTop: "6px", display: "block", maxWidth: "480px" }}>
                       {project.tagline}
                     </span>
                   </div>
