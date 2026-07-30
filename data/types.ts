@@ -29,12 +29,6 @@ export interface Project {
   link?: string;
 }
 
-export interface Service {
-  icon: string;
-  title: string;
-  description: string;
-}
-
 export interface Certification {
   issuer: string;
   name: string;

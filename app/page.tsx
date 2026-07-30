@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { projects } from "../data/projects";
-import { services } from "../data/services";
 import { skills } from "../data/skills";
 import { certifications } from "../data/certifications";
 import { getStatusStyle, getMetaStyle } from "../lib/badges";
@@ -80,7 +79,7 @@ export default function Home() {
   const projectsRef = useFadeIn();
   const featuredListRef = useRef<HTMLDivElement>(null);
   const allWorkListRef = useRef<HTMLDivElement>(null);
-  const servicesRef = useFadeIn();
+  const processRef = useFadeIn();
   const skillsRef = useFadeIn();
   const experienceRef = useFadeIn();
   const certRef = useFadeIn();
@@ -157,27 +156,6 @@ export default function Home() {
         @media (prefers-reduced-motion: reduce) {
           .proj-expand { transition: none; }
         }
-
-        /* ── SERVICES ── */
-        .services-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 0;
-          border: 0.5px solid rgba(255,255,255,0.06);
-          border-radius: 12px;
-          overflow: hidden;
-        }
-        .service-cell {
-          padding: 28px 24px;
-          transition: background 0.2s ease;
-          cursor: default;
-          border-bottom: none;
-          border-right: none;
-        }
-        /* Desktop: right borders on all except every 4th */
-        .service-cell:not(:nth-child(4n)) { border-right: 0.5px solid rgba(255,255,255,0.06); }
-        /* Desktop: bottom borders on top row */
-        .service-cell:nth-child(-n+4) { border-bottom: 0.5px solid rgba(255,255,255,0.06); }
 
         /* ── SKILLS ── */
         .skills-row {
@@ -263,13 +241,6 @@ export default function Home() {
           .project-row .proj-badges { display: none; }
           .proj-expand-inner > div { padding-left: 48px !important; }
 
-          /* SERVICES */
-          .services-section { padding: 60px 24px !important; }
-          .services-grid { grid-template-columns: 1fr; }
-          .service-cell { padding: 20px 16px; border-right: none !important; }
-          .service-cell:nth-child(-n+4) { border-bottom: none; }
-          .service-cell:not(:last-child) { border-bottom: 0.5px solid rgba(255,255,255,0.06) !important; }
-
           /* SKILLS */
           .skills-section { padding: 60px 24px !important; }
           .skills-row { grid-template-columns: 1fr; gap: 10px; }
@@ -293,7 +264,6 @@ export default function Home() {
            SMALL MOBILE — 480px and below
         ══════════════════════════════════════ */
         @media (max-width: 480px) {
-          .services-grid { grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -943,15 +913,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SERVICES ── */}
+      {/* ── HOW I WORK ── */}
       <section
-        id="services"
-        className="services-section"
+        id="process"
+        ref={processRef}
         style={{
           background: "#0f0f0f",
           borderTop: "0.5px solid rgba(255,255,255,0.06)",
           borderBottom: "0.5px solid rgba(255,255,255,0.06)",
           padding: "80px clamp(24px, 5vw, 80px)",
+          opacity: 0,
+          transform: "translateY(20px)",
+          transition: "opacity 0.6s ease, transform 0.6s ease",
         }}
       >
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
@@ -964,7 +937,7 @@ export default function Home() {
               marginBottom: "12px",
             }}
           >
-            Services
+            How I Work
           </p>
           <h2
             style={{
@@ -972,63 +945,62 @@ export default function Home() {
               fontWeight: 300,
               letterSpacing: "-1px",
               color: "#ffffff",
+              marginBottom: "8px",
+            }}
+          >
+            No surprises.
+          </h2>
+          <p
+            style={{
+              color: "#999999",
+              fontSize: "14px",
               marginBottom: "48px",
             }}
           >
-            What I can build for you.
-          </h2>
+            Fixed scope. Fixed timeline. You own everything at the end.
+          </p>
 
-          <div className="services-grid">
-            {services.map((service, i) => (
-                <div
-                  key={i}
-                  className="service-cell"
-                  style={{
-                    borderBottom: i < services.length - 1 ? "0.5px solid rgba(255,255,255,0.06)" : "none",
-                    borderRight: "none",
-                  }}
-                  onMouseEnter={(e) =>
-                    ((e.currentTarget as HTMLElement).style.background =
-                      "rgba(255,255,255,0.02)")
-                  }
-                  onMouseLeave={(e) =>
-                    ((e.currentTarget as HTMLElement).style.background =
-                      "transparent")
-                  }
-                >
-                  <div
-                    style={{
-                      color: "#e8d5b0",
-                      fontSize: "18px",
-                      marginBottom: "12px",
-                      lineHeight: 1,
-                    }}
-                  >
-                    {service.icon}
-                  </div>
-                  <h3
-                    style={{
-                      color: "#cccccc",
-                      fontSize: "15px",
-                      fontWeight: 400,
-                      marginBottom: "8px",
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {service.title}
-                  </h3>
-                  <p
-                    style={{
-                      color: "#999999",
-                      fontSize: "13px",
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    {service.description}
-                  </p>
-                </div>
-            ))}
-          </div>
+          {[
+            {
+              num: "01",
+              title: "Scope call",
+              body: "One call. You describe the process that eats your time. I tell you what a system would look like, what it costs, and how long it takes. If I am not the right builder for it, I say so on the call.",
+            },
+            {
+              num: "02",
+              title: "Fixed build",
+              body: "Most systems ship in two weeks. You see progress on a live URL from day two or three, not a big reveal at the end. Scope is locked before I start, so the price does not move.",
+            },
+            {
+              num: "03",
+              title: "Handover",
+              body: "You get the system, the code, the documentation, and a walkthrough. Your team runs it without me. Soul Bands has run their system without my involvement since the day I handed it over.",
+            },
+            {
+              num: "04",
+              title: "After",
+              body: "Most clients need nothing more. If you want changes later, you ask and I quote. No retainers you did not ask for, no lock-in.",
+            },
+          ].map((step, i) => (
+            <div
+              key={step.num}
+              className="project-row"
+              data-delay={`${Math.min(i * 60, 360)}ms`}
+              style={{ display: "grid", cursor: "default" }}
+            >
+              <span style={{ color: "#e8d5b0", fontSize: "13px", opacity: 0.4 }}>
+                {step.num}
+              </span>
+              <div style={{ gridColumn: "2 / -1" }}>
+                <span style={{ color: "#ffffff", fontSize: "16px", display: "block" }}>
+                  {step.title}
+                </span>
+                <span style={{ color: "#777777", fontSize: "13px", marginTop: "6px", display: "block", maxWidth: "640px", lineHeight: 1.7 }}>
+                  {step.body}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
